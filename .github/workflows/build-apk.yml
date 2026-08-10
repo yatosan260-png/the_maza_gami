@@ -1,0 +1,31 @@
+name: Build The Maza Gami APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Build Android APK with Godot 3.5.3
+        uses: dulvui/godot-android-export@v3.0.0
+        with:
+          working-directory: .
+          godot-version: 3.5.3
+
+      - name: Check APK
+        run: |
+          test -f build/android/The_Maza_Gami.apk
+          ls -lh build/android/The_Maza_Gami.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: The-Maza-Gami-APK
+          path: build/android/The_Maza_Gami.apk
+          if-no-files-found: error
